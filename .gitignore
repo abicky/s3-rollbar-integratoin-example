@@ -1,0 +1,4 @@
+.envrc
+rollbar_test.zip
+terraform.tfstate
+terraform.tfstate.backup
