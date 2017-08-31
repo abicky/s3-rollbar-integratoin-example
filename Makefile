@@ -1,13 +1,10 @@
 all: apply
 
-apply: build
+apply:
 	terraform apply
 
-plan: build
+plan:
 	terraform plan
-
-build: clean
-	zip rollbar_test.zip index.js
 
 clean:
 	rm -f rollbar_test.zip

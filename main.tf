@@ -1,6 +1,12 @@
 variable "bucket" {}
 variable "rollbar_access_token" {}
 
+data "archive_file" "rollbar_test_zip" {
+  type        = "zip"
+  source_file = "${path.module}/index.js"
+  output_path = "${path.module}/rollbar_test.zip"
+}
+
 provider "aws" {
   region = "ap-northeast-1"
 }
@@ -83,8 +89,8 @@ resource "aws_lambda_permission" "allow_s3_to_invoke_rollbar_test" {
 
 resource "aws_lambda_function" "rollbar_test" {
   function_name    = "rollbar_test"
-  filename         = "rollbar_test.zip"
-  source_code_hash = "${base64sha256(file("rollbar_test.zip"))}"
+  filename         = "${data.archive_file.rollbar_test_zip.output_path}"
+  source_code_hash = "${data.archive_file.rollbar_test_zip.output_base64sha256}"
   role             = "${aws_iam_role.lambda_s3_readonly_role.arn}"
   handler          = "index.handler"
   runtime          = "nodejs6.10"
